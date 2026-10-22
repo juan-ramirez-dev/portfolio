@@ -1,38 +1,30 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Juan Ramírez — The Architecture Issue
 
-## Getting Started
+An editorial, scroll-driven portfolio styled like a luxury watch magazine. Instead of a wall of logos, it walks through the architectures I built: micro-frontends, offline payments, Mercado Pago, Stripe Connect, microservices and CI/CD.
 
-First, run the development server:
+> **Status:** visual prototype. All copy, companies and metrics are placeholders until the design is settled.
+
+## Stack
+
+- Next.js 16 (App Router, static export), React 19, TypeScript, Tailwind CSS 4
+- GSAP + ScrollTrigger for scroll-scrubbed animation, Lenis for smooth scrolling
+- Bodoni Moda, Inter Tight and JetBrains Mono through `next/font`
+
+## How it works
+
+- **The watch** (`components/watch/Watch.tsx`) is a hand-built SVG of a Presage-style watch. On the cover it is large; as you scroll it flies into the right-hand rail (`WatchRail.tsx`).
+- **The drive** (`components/watch/drive.ts`): every section in `content/stations.ts` is a station on the dial. The hour hand points at the current station, the minute hand turns once per station, the date window shows the station number and the bezel clicks round.
+- **Chapters** (`sections/Chapter.tsx`) render from `content/chapters.ts`. Each one has a cover spread, a spec sheet, the problem, an architecture diagram that draws itself (`components/diagrams/ArchDiagram.tsx`), a CI/CD pipeline (`Pipeline.tsx`) and impact metrics.
+- **Generic scroll effects** are opted into with data attributes such as `data-reveal`, `data-split`, `data-parallax` and `data-countup` (see `components/scroll/Animations.tsx`).
+
+## Develop
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+npm install
+npm run dev        # http://localhost:3000/portfolio
+npm run build      # static export to ./out
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Deploy
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Pushing to `redesign/calibre` runs `.github/workflows/pages.yml`, which publishes to https://juan-ramirez-dev.github.io/portfolio/.
