@@ -1,12 +1,11 @@
 'use client'
 
-import { gsap, ScrollTrigger, useGSAP, prefersReducedMotion } from '@/lib/gsap'
+import { gsap, useGSAP, ScrollTrigger, prefersReducedMotion } from '@/lib/gsap'
 
 // Declarative scroll effects, opted into with data attributes:
 //   data-reveal            fade + rise once when entering
 //   data-split             words slide up out of a mask (see <SplitText>)
-//   data-scrub-words       words brighten as you scroll through
-//   data-parallax="0.2"    drifts vertically at the given speed
+//   data-drift="6"         slides sideways by ±6% while its panel crosses the screen
 //   data-countup="42"      counts up once when entering
 export function Animations() {
   useGSAP(() => {
@@ -23,40 +22,26 @@ export function Animations() {
     gsap.utils.toArray<HTMLElement>('[data-split]').forEach((el) => {
       gsap.fromTo(
         el.querySelectorAll('.split-word'),
-        { yPercent: 115, rotate: 3 },
+        { yPercent: 115 },
         {
           yPercent: 0,
-          rotate: 0,
           duration: 1.2,
           ease: 'expo.out',
-          stagger: 0.05,
+          stagger: 0.06,
           scrollTrigger: { trigger: el, start: 'top 85%', once: true },
         },
       )
     })
 
-    gsap.utils.toArray<HTMLElement>('[data-scrub-words]').forEach((el) => {
-      gsap.fromTo(
-        el.querySelectorAll('.scrub-word'),
-        { opacity: 0.12 },
-        {
-          opacity: 1,
-          stagger: 0.1,
-          ease: 'none',
-          scrollTrigger: { trigger: el, start: 'top 75%', end: 'bottom 45%', scrub: true },
-        },
-      )
-    })
-
-    gsap.utils.toArray<HTMLElement>('[data-parallax]').forEach((el) => {
-      const speed = Number(el.dataset.parallax) || 0.2
+    gsap.utils.toArray<HTMLElement>('[data-drift]').forEach((el) => {
+      const shift = Number(el.dataset.drift) || 6
       gsap.fromTo(
         el,
-        { yPercent: -speed * 100 },
+        { xPercent: shift },
         {
-          yPercent: speed * 100,
+          xPercent: -shift,
           ease: 'none',
-          scrollTrigger: { trigger: el.parentElement ?? el, start: 'top bottom', end: 'bottom top', scrub: true },
+          scrollTrigger: { trigger: el.closest('[data-panel]') ?? el, start: 'top bottom', end: 'bottom top', scrub: true },
         },
       )
     })

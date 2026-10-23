@@ -8,8 +8,10 @@ let lenisInstance: Lenis | null = null
 export const getLenis = () => lenisInstance
 
 export function scrollToId(id: string) {
-  const el = document.getElementById(id)
-  if (!el) return
+  const found = document.getElementById(id)
+  if (!found) return
+  // a pinned panel is position: fixed; its spacer keeps the real position
+  const el = found.parentElement?.classList.contains('pin-spacer') ? found.parentElement : found
   if (lenisInstance) lenisInstance.scrollTo(el, { duration: 1.6, force: true })
   else el.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth' })
 }
