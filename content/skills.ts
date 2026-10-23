@@ -22,22 +22,11 @@ export type Skill = {
 const pick = (...ids: string[]) => ids.map((id) => cases.find((c) => c.id === id)!)
 
 // Colours alternate so a page never follows a separator of its own colour.
-// Order is weight: AI first, then fintech, backend, CI/CD and micro-frontends.
+// Order is weight: fintech first, then AI, backend, CI/CD and micro-frontends.
 export const skills: Skill[] = [
   {
-    id: 'ai',
-    n: '01',
-    title: ['Building', 'with AI'],
-    label: 'Building with AI',
-    line: 'Agents do the typing. I own the architecture, the review and the result.',
-    colour: 'red',
-    page: 'black',
-    accent: 'red',
-    cases: pick('build-loop', 'neura', 'ai-in-product'),
-  },
-  {
     id: 'fintech',
-    n: '02',
+    n: '01',
     title: ['Fintech &', 'payments'],
     label: 'Fintech & payments',
     line: 'Real money, real cards, phones with no signal — flows that hold up.',
@@ -47,6 +36,17 @@ export const skills: Skill[] = [
     cases: pick('stripe', 'offline-wallet'),
   },
   {
+    id: 'ai',
+    n: '02',
+    title: ['Building', 'with AI'],
+    label: 'Building with AI',
+    line: 'Agents do the typing. I own the architecture, the review and the result.',
+    colour: 'red',
+    page: 'paper',
+    accent: 'red',
+    cases: pick('build-loop', 'neura', 'ai-in-product'),
+  },
+  {
     id: 'backend',
     n: '03',
     title: ['Backend', '& data'],
@@ -54,7 +54,7 @@ export const skills: Skill[] = [
     line: 'APIs, Postgres and Redis: the parts nobody sees and everything depends on.',
     colour: 'black',
     page: 'paper',
-    accent: 'red',
+    accent: 'blue',
     cases: pick('api', 'redis'),
   },
   {
