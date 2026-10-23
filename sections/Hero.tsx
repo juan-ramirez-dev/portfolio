@@ -2,7 +2,7 @@
 
 import { useRef } from 'react'
 import { gsap, useGSAP, prefersReducedMotion } from '@/lib/gsap'
-import { chapters } from '@/content/chapters'
+import { skills } from '@/content/skills'
 import { profile } from '@/content/profile'
 import { scrollToId } from '@/components/scroll/SmoothScroll'
 
@@ -11,69 +11,71 @@ export function Hero() {
 
   useGSAP(
     () => {
-      const root = ref.current!
-      const intro = gsap.timeline({ defaults: { ease: 'expo.out' } })
-      if (!prefersReducedMotion()) {
-        intro
-          .from('.hero__mast > *', { y: -20, opacity: 0, duration: 1, stagger: 0.08 })
-          .from('.hero__name .split-word', { yPercent: 110, duration: 1.4, stagger: 0.08 }, 0.1)
-          .from('.hero__lines li, .hero__foot > *', { y: 24, opacity: 0, duration: 1, stagger: 0.06 }, 0.5)
-      }
+      if (prefersReducedMotion()) return
       gsap
-        .timeline({ scrollTrigger: { trigger: root, start: 'top top', end: 'bottom bottom', scrub: 0.6 } })
-        .to('.hero__name', { yPercent: -30, letterSpacing: '0.04em', opacity: 0.08, ease: 'none' }, 0)
-        .to('.hero__lines, .hero__foot', { y: -60, opacity: 0, ease: 'none', duration: 0.6 }, 0)
-        .to('.hero__glow', { scale: 1.5, opacity: 0, ease: 'none' }, 0)
+        .timeline({ defaults: { ease: 'expo.out' } })
+        .from('.cover__name .split-word', { yPercent: 110, duration: 1.5, stagger: 0.1 }, 0.1)
+        .fromTo(
+          '.cover__portrait',
+          { clipPath: 'inset(100% 0% 0% 0%)' },
+          { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.6, ease: 'expo.inOut' },
+          0,
+        )
+        .from('.cover__intro > *, .contents li', { y: 20, opacity: 0, duration: 1, stagger: 0.05 }, 0.6)
     },
     { scope: ref },
   )
 
   return (
-    <section ref={ref} id="cover" className="hero theme-bezel">
-      <div className="hero__sticky" data-hero-sticky>
-        <div className="hero__glow" aria-hidden />
-        <div className="hero__mast">
-          <span>{profile.issue}</span>
-          <span>The Architecture Issue</span>
-          <span>{profile.season}</span>
+    <section ref={ref} id="cover" className="panel cover t-paper" data-panel data-label="Portfolio" data-folio="2026">
+      <div className="cover__grid">
+        <div className="cover__intro">
+          <p className="cover__role">{profile.title}</p>
+          <p className="cover__sub">{profile.subtitle}</p>
         </div>
 
-        <h1 className="hero__name" aria-label={profile.name}>
-          <span className="split-mask" aria-hidden>
-            <span className="split-word">{profile.firstName}</span>
-          </span>{' '}
-          <span className="split-mask" aria-hidden>
-            <span className="split-word">{profile.lastName}</span>
-          </span>
-        </h1>
-
-        <div className="hero__slot" data-hero-slot />
-
-        <ul className="hero__lines">
-          {chapters.slice(0, 4).map((c, i) => (
-            <li key={c.id}>
-              <a
-                href={`#${c.id}`}
-                onClick={(e) => {
-                  e.preventDefault()
-                  scrollToId(c.id)
-                }}
-              >
-                <span className="hero__page">p. {12 + i * 14}</span>
-                <span>{c.title}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-
-        <div className="hero__foot">
-          <p className="hero__title">
-            {profile.title.split(' ')[0]} <em>{profile.title.split(' ').slice(1).join(' ')}</em>
-          </p>
-          <p className="hero__sub">{profile.subtitle}</p>
-          <p className="hero__wind">Scroll to wind ↓</p>
+        <div className="cover__portrait">
+          {profile.portrait ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={profile.portrait} alt={profile.name} />
+          ) : (
+            <span className="cover__portrait-note">Portrait</span>
+          )}
         </div>
+
+        <nav className="cover__contents" aria-label="Contents">
+          <p className="label">Contents/</p>
+          <ol className="contents">
+            {skills.map((s) => (
+              <li key={s.id} className={`a-${s.colour}`}>
+                <a
+                  href={`#${s.id}`}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    scrollToId(s.id)
+                  }}
+                >
+                  <span className="contents__n">
+                    <i className="contents__swatch" aria-hidden />
+                    {s.n}
+                  </span>
+                  <span className="contents__t">{s.label}</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
       </div>
+
+      <h1 className="cover__name" aria-label={profile.name}>
+        <span className="split-mask" aria-hidden>
+          <span className="split-word">{profile.firstName}</span>
+        </span>{' '}
+        <span className="split-mask" aria-hidden>
+          <span className="split-word">{profile.lastName}</span>
+        </span>
+      </h1>
+      <div className="panel__shade" aria-hidden />
     </section>
   )
 }

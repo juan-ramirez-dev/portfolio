@@ -5,7 +5,7 @@ import { ScrollTrigger, useGSAP, prefersReducedMotion } from '@/lib/gsap'
 
 type Props = { steps: string[]; figure: string }
 
-/** CI/CD track: a rose-gold bead travels the stations as you scroll. */
+/** CI/CD track: a bead travels the stations as you scroll. */
 export function Pipeline({ steps, figure }: Props) {
   const ref = useRef<HTMLElement>(null)
 

@@ -2,7 +2,7 @@
 
 import { useRef } from 'react'
 import { gsap, useGSAP, prefersReducedMotion } from '@/lib/gsap'
-import type { DiagramEdge, DiagramNode } from '@/content/chapters'
+import type { DiagramEdge, DiagramNode } from '@/content/cases'
 
 const W = 1000
 const H = 520
@@ -36,122 +36,151 @@ function route(a: DiagramNode, b: DiagramNode) {
     x: (p0.x + 3 * p1.x + 3 * p2.x + p3.x) / 8,
     y: (p0.y + 3 * p1.y + 3 * p2.y + p3.y) / 8,
   }
-  return { d: `M${p0.x} ${p0.y} C${p1.x} ${p1.y} ${p2.x} ${p2.y} ${p3.x} ${p3.y}`, start: p0, end: p3, mid }
+  return { d: `M${p0.x} ${p0.y} C${p1.x} ${p1.y} ${p2.x} ${p2.y} ${p3.x} ${p3.y}`, end: p3, mid }
 }
 
-type Props = { nodes: DiagramNode[]; edges: DiagramEdge[]; figure: string; caption: string }
+type Props = { nodes: DiagramNode[]; edges: DiagramEdge[]; story?: string[]; figure: string; caption: string }
 
-export function ArchDiagram({ nodes, edges, figure, caption }: Props) {
-  const ref = useRef<HTMLElement>(null)
-  const gridId = `grid-${figure.replace(/\W/g, '-')}`
+/**
+ * Architecture that assembles itself as you scroll: one node per step, each edge
+ * drawn once both its ends exist, with a running line of narration underneath.
+ * The drawing holds still (sticky) while the steps play.
+ */
+export function ArchDiagram({ nodes, edges, story, figure, caption }: Props) {
+  const ref = useRef<HTMLDivElement>(null)
   const byId = Object.fromEntries(nodes.map((n) => [n.id, n]))
-  const routes = edges.map((e) => ({ edge: e, ...route(byId[e.from], byId[e.to]) }))
+  const order = Object.fromEntries(nodes.map((n, i) => [n.id, i]))
+  const routes = edges.map((e) => ({
+    edge: e,
+    step: Math.max(order[e.from], order[e.to]),
+    ...route(byId[e.from], byId[e.to]),
+  }))
+  const lines = nodes.map((n, i) => story?.[i] ?? `${n.label} — ${n.sub ?? ''}`)
+  const steps = nodes.length
 
   useGSAP(
     () => {
-      if (prefersReducedMotion()) return
       const root = ref.current!
-      const solid = root.querySelectorAll<SVGPathElement>('[data-edge="solid"]')
-      solid.forEach((p) => {
-        const len = p.getTotalLength()
-        p.style.strokeDasharray = `${len}`
-        p.style.strokeDashoffset = `${len}`
-      })
+      const q = (sel: string) => Array.from(root.querySelectorAll<SVGElement | HTMLElement>(sel))
+      const nodeEls = q('[data-node]')
+      const lineEls = q('[data-line]')
+      const count = root.querySelector<HTMLElement>('[data-count]')!
+      const scroller = root.querySelector<HTMLElement>('.stage__scroller')!
+
+      let current = -1
+      const setStep = (k: number) => {
+        if (k === current) return
+        current = k
+        nodeEls.forEach((el, i) => el.toggleAttribute('data-current', i === k))
+        lineEls.forEach((el, i) => el.toggleAttribute('data-on', i === k))
+        count.textContent = String(k + 1).padStart(2, '0')
+        // narrow screens scroll the drawing sideways: keep the new node in view
+        const overflow = scroller.scrollWidth - scroller.clientWidth
+        if (overflow > 0) {
+          const left = (nodes[k].x / W) * scroller.scrollWidth - scroller.clientWidth / 2
+          scroller.scrollTo({ left: Math.max(0, Math.min(overflow, left)), behavior: 'smooth' })
+        }
+      }
+
+      if (prefersReducedMotion()) {
+        root.setAttribute('data-static', '')
+        return
+      }
+
       const tl = gsap.timeline({
-        scrollTrigger: { trigger: root, start: 'top 78%', end: 'bottom 55%', scrub: 0.6 },
+        defaults: { ease: 'none' },
+        scrollTrigger: { trigger: root, start: 'top 40%', end: 'bottom bottom', scrub: 0.5 },
+        onUpdate: () => setStep(Math.min(steps - 1, Math.floor(tl.time() + 0.15))),
       })
-      tl.from(root.querySelectorAll('[data-node]'), { opacity: 0, y: 18, duration: 0.5, stagger: 0.12 }, 0)
-        .to(solid, { strokeDashoffset: 0, duration: 0.6, stagger: 0.1, ease: 'none' }, 0.25)
-        .from(root.querySelectorAll('[data-edge="dashed"], [data-port]'), { opacity: 0, duration: 0.4, stagger: 0.05 }, 0.5)
-        .from(root.querySelectorAll('[data-edge-label]'), { opacity: 0, duration: 0.3, stagger: 0.05 }, 0.8)
-        .from(root.querySelectorAll('[data-packet]'), { opacity: 0, duration: 0.2 }, 1.1)
+
+      // nodes wait as a faint blueprint until their step
+      nodeEls.forEach((el, i) => tl.from(el, { opacity: 0.1, y: 10, duration: 0.5, ease: 'power2.out' }, i))
+      routes.forEach(({ edge, step }, j) => {
+        const path = root.querySelector<SVGPathElement>(`[data-path="${j}"]`)!
+        if (edge.dashed) {
+          tl.from(path, { opacity: 0, duration: 0.4 }, step + 0.35)
+        } else {
+          const len = path.getTotalLength()
+          gsap.set(path, { strokeDasharray: len, strokeDashoffset: len })
+          tl.to(path, { strokeDashoffset: 0, duration: 0.55 }, step + 0.3)
+        }
+        tl.from(q(`[data-extra="${j}"]`), { opacity: 0, duration: 0.25 }, step + 0.75)
+      })
+      // hold the finished drawing for a beat before the page moves on
+      tl.to({}, { duration: 0.8 })
+      setStep(0)
     },
     { scope: ref },
   )
 
   return (
-    <figure ref={ref} className="diagram">
-      <div className="diagram__scroller">
-        <svg viewBox={`0 0 ${W} ${H}`} className="diagram__svg" role="img" aria-label={caption}>
-          <defs>
-            <pattern id={gridId} width="20" height="20" patternUnits="userSpaceOnUse">
-              <circle cx="1" cy="1" r="1" fill="var(--line)" />
-            </pattern>
-          </defs>
-          <rect width={W} height={H} fill={`url(#${gridId})`} />
-          {[
-            [8, 8],
-            [W - 8, 8],
-            [8, H - 8],
-            [W - 8, H - 8],
-          ].map(([x, y], i) => (
-            <path key={i} d={`M${x - 8} ${y} h16 M${x} ${y - 8} v16`} stroke="var(--muted)" strokeWidth="1" />
-          ))}
-
-          {routes.map(({ edge, d }, i) => (
-            <path
-              key={i}
-              d={d}
-              data-edge={edge.dashed ? 'dashed' : 'solid'}
-              fill="none"
-              stroke={edge.dashed ? 'var(--muted)' : 'var(--accent)'}
-              strokeWidth={edge.dashed ? 1.2 : 1.6}
-              strokeDasharray={edge.dashed ? '5 6' : undefined}
-            />
-          ))}
-          {routes.map(({ edge, d }, i) =>
-            edge.dashed ? null : (
-              <circle key={i} r="3.2" fill="var(--accent)" data-packet>
-                <animateMotion dur={`${2.4 + (i % 3) * 0.5}s`} begin={`${i * 0.35}s`} repeatCount="indefinite" path={d} />
-              </circle>
-            ),
-          )}
-          {routes.map(({ end }, i) => (
-            <circle key={i} cx={end.x} cy={end.y} r="3.5" fill="var(--bg)" stroke="var(--accent)" strokeWidth="1.4" data-port />
-          ))}
-          {routes.map(({ edge, mid }, i) =>
-            edge.label ? (
-              <text
-                key={i}
-                x={mid.x}
-                y={mid.y - 8}
-                textAnchor="middle"
-                className="diagram__edge-label"
-                data-edge-label
-              >
-                {edge.label}
-              </text>
-            ) : null,
-          )}
-
-          {nodes.map((n) => (
-            <g key={n.id} transform={`translate(${n.x - NODE_W / 2} ${n.y - NODE_H / 2})`}>
-              <g data-node>
-                <rect
-                  width={NODE_W}
-                  height={NODE_H}
-                  rx="2"
-                  fill="var(--surface)"
-                  stroke={n.accent ? 'var(--accent)' : 'var(--line-strong)'}
-                  strokeWidth={n.accent ? 1.6 : 1}
-                />
-                {n.accent && <path d={`M0 10 V0 H10 M${NODE_W - 10} ${NODE_H} H${NODE_W} V${NODE_H - 10}`} stroke="var(--accent)" strokeWidth="3" fill="none" />}
-                <text x={NODE_W / 2} y={n.sub ? 29 : 38} textAnchor="middle" className="diagram__node-label">
-                  {n.label}
+    <div ref={ref} className="stage" style={{ ['--steps' as string]: steps }}>
+      <figure className="stage__sticky">
+        <div className="stage__scroller">
+          <svg viewBox={`0 0 ${W} ${H}`} className="stage__svg" role="img" aria-label={caption}>
+            {routes.map(({ edge, d }, j) => (
+              <path
+                key={j}
+                d={d}
+                data-path={j}
+                fill="none"
+                stroke={edge.dashed ? 'var(--line-strong)' : 'var(--accent)'}
+                strokeWidth={edge.dashed ? 1.2 : 1.8}
+                strokeDasharray={edge.dashed ? '5 6' : undefined}
+              />
+            ))}
+            {routes.map(({ edge, d }, j) =>
+              edge.dashed ? null : (
+                <circle key={j} r="3.6" fill="var(--accent)" data-extra={j}>
+                  <animateMotion dur={`${2.4 + (j % 3) * 0.5}s`} begin={`${j * 0.35}s`} repeatCount="indefinite" path={d} />
+                </circle>
+              ),
+            )}
+            {routes.map(({ end }, j) => (
+              <circle key={j} cx={end.x} cy={end.y} r="3.5" fill="var(--bg)" stroke="var(--fg)" strokeWidth="1.4" data-extra={j} />
+            ))}
+            {routes.map(({ edge, mid }, j) =>
+              edge.label ? (
+                <text key={j} x={mid.x} y={mid.y - 9} textAnchor="middle" className="stage__edge-label" data-extra={j}>
+                  {edge.label}
                 </text>
-                {n.sub && (
-                  <text x={NODE_W / 2} y="48" textAnchor="middle" className="diagram__node-sub">
-                    {n.sub}
+              ) : null,
+            )}
+
+            {nodes.map((n) => (
+              <g key={n.id} transform={`translate(${n.x - NODE_W / 2} ${n.y - NODE_H / 2})`}>
+                <g data-node className={n.accent ? 'node node--accent' : 'node'}>
+                  <rect width={NODE_W} height={NODE_H} className="node__box" />
+                  <text x="16" y={n.sub ? 30 : 39} className="node__label">
+                    {n.label}
                   </text>
-                )}
+                  {n.sub && (
+                    <text x="16" y="49" className="node__sub">
+                      {n.sub}
+                    </text>
+                  )}
+                </g>
               </g>
-            </g>
-          ))}
-        </svg>
-      </div>
-      <figcaption className="caption">
-        <span className="caption__fig">Fig. {figure}</span> {caption}
-      </figcaption>
-    </figure>
+            ))}
+          </svg>
+        </div>
+
+        <figcaption className="stage__foot">
+          <span className="stage__count">
+            <b data-count>01</b> / {String(steps).padStart(2, '0')}
+          </span>
+          <ol className="stage__story">
+            {lines.map((line, i) => (
+              <li key={i} data-line data-on={i === 0 ? '' : undefined}>
+                {line}
+              </li>
+            ))}
+          </ol>
+          <span className="stage__fig">
+            Fig. {figure} — {caption}
+          </span>
+        </figcaption>
+      </figure>
+    </div>
   )
 }
