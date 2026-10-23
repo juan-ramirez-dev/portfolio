@@ -1,19 +1,23 @@
 'use client'
 
-import { career } from '@/content/career'
+import { getContent } from '@/content'
+import type { Locale } from '@/content/i18n'
 import { skillOf } from '@/content/skills'
 import { SplitText } from '@/components/scroll/SplitText'
 import { scrollToId } from '@/components/scroll/SmoothScroll'
 
-export function Ledger() {
+export function Ledger({ lang }: { lang: Locale }) {
+  const { career, ui } = getContent(lang)
   return (
-    <section id="index" className="panel index t-paper" data-panel data-label="Index" data-folio="—">
+    <section id="index" className="panel index t-paper" data-panel data-label={ui.index.label} data-folio="—">
       <div className="frame">
         <header className="case__head label" data-reveal>
-          <span>{career.length} roles</span>
-          <span>Where the work happened</span>
+          <span>
+            {career.length} {ui.index.roles}
+          </span>
+          <span>{ui.index.where}</span>
         </header>
-        <SplitText text="Where." className="index__title" />
+        <SplitText text={ui.index.title} className="index__title" />
         <ol className="ledger">
           {career.map((job, i) => {
             const n = String(i + 1).padStart(2, '0')

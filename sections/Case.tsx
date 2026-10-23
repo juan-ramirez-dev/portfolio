@@ -1,13 +1,13 @@
-import { LAYERS, type Case as CaseData } from '@/content/cases'
-import type { Skill } from '@/content/skills'
+import { LAYERS } from '@/content/cases'
+import type { Content, LocalCase, LocalSkill } from '@/content'
 import { SplitText } from '@/components/scroll/SplitText'
 import { ArchDiagram } from '@/components/diagrams/ArchDiagram'
 import { Pipeline } from '@/components/diagrams/Pipeline'
 import { asset } from '@/lib/asset'
 
-type Props = { data: CaseData; skill: Skill; number: number; folio: string }
+type Props = { data: LocalCase; skill: LocalSkill; ui: Content['ui']; number: number; folio: string }
 
-export function Case({ data: c, skill, number, folio }: Props) {
+export function Case({ data: c, skill, ui, number, folio }: Props) {
   return (
     <section
       id={c.id}
@@ -26,10 +26,10 @@ export function Case({ data: c, skill, number, folio }: Props) {
           </span>
         </header>
 
-        <ul className="layers label" data-reveal aria-label="Layers">
+        <ul className="layers label" data-reveal aria-label={ui.case.layers}>
           {LAYERS.map((l) => (
             <li key={l} data-on={c.layers.includes(l) ? '' : undefined}>
-              {l}
+              {ui.layers[l]}
             </li>
           ))}
         </ul>
@@ -44,7 +44,7 @@ export function Case({ data: c, skill, number, folio }: Props) {
             <p className="case__kicker">{c.kicker}</p>
             {c.ai && (
               <p className="case__ai">
-                <span className="label">AI in the loop</span>
+                <span className="label">{ui.case.ai}</span>
                 {c.ai}
               </p>
             )}
@@ -62,26 +62,30 @@ export function Case({ data: c, skill, number, folio }: Props) {
 
         <div className="case__block">
           <p className="case__block-label label" data-reveal>
-            {c.pipelineLabel ?? 'Delivery'}
+            {c.pipelineLabel ?? ui.case.delivery}
           </p>
-          <Pipeline steps={c.pipeline} figure={`${skill.n}.${number}.2`} />
+          <Pipeline steps={c.pipeline} figure={`${skill.n}.${number}.2`} caption={ui.case.pipeline} />
         </div>
 
         {c.metrics.length > 0 && (
           <div className="case__block">
             <p className="case__block-label label" data-reveal>
-              Impact
+              {ui.case.impact}
             </p>
             <div className="metrics">
               {c.metrics.map((m) => (
                 <div key={m.label} className="metric" data-reveal>
-                  <p className="metric__value">
-                    {m.prefix}
-                    <span data-countup={m.value} data-decimals={m.decimals ?? 0}>
-                      {m.value.toFixed(m.decimals ?? 0)}
-                    </span>
-                    {m.suffix}
-                  </p>
+                  {m.word ? (
+                    <p className="metric__value metric__value--word">{m.word}</p>
+                  ) : (
+                    <p className="metric__value">
+                      {m.prefix}
+                      <span data-countup={m.value} data-decimals={m.decimals ?? 0}>
+                        {(m.value ?? 0).toFixed(m.decimals ?? 0)}
+                      </span>
+                      {m.suffix}
+                    </p>
+                  )}
                   <p className="metric__label">{m.label}</p>
                 </div>
               ))}

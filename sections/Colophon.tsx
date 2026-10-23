@@ -1,15 +1,17 @@
-import { profile } from '@/content/profile'
+import { getContent } from '@/content'
+import type { Locale } from '@/content/i18n'
 import { SplitText } from '@/components/scroll/SplitText'
 
-export function Colophon() {
+export function Colophon({ lang }: { lang: Locale }) {
+  const { profile, ui } = getContent(lang)
   return (
-    <section id="contact" className="panel colophon t-blue" data-panel data-label="Contact" data-folio="End">
+    <section id="contact" className="panel colophon t-blue" data-panel data-label={ui.contact.label} data-folio={ui.contact.folio}>
       <div className="frame colophon__inner">
         <header className="case__head label" data-reveal>
-          <span>Get in touch</span>
-          <span>End of portfolio</span>
+          <span>{ui.contact.touch}</span>
+          <span>{ui.contact.end}</span>
         </header>
-        <SplitText text="Let's talk." className="colophon__title" />
+        <SplitText text={ui.contact.title} className="colophon__title" />
         <p className="colophon__availability" data-reveal>
           {profile.availability}
         </p>
@@ -29,8 +31,8 @@ export function Colophon() {
         </div>
         <footer className="colophon__foot label">
           <span>© 2026 {profile.name}</span>
-          <span>Set in Inter Tight &amp; JetBrains Mono</span>
-          <span>Built with Next.js &amp; GSAP</span>
+          <span>{ui.contact.type}</span>
+          <span>{ui.contact.built}</span>
         </footer>
       </div>
     </section>

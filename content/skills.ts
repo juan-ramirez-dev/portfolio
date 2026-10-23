@@ -1,4 +1,5 @@
 import { cases, type Case } from './cases'
+import type { T } from './i18n'
 
 export type Colour = 'yellow' | 'blue' | 'red' | 'black' | 'paper'
 
@@ -6,10 +7,10 @@ export type Skill = {
   id: string
   n: string
   /** separator headline, one entry per line */
-  title: string[]
-  label: string
+  title: T[]
+  label: T
   /** the one sentence printed on the separator */
-  line: string
+  line: T
   /** separator background */
   colour: Colour
   /** case pages that follow the separator */
@@ -27,9 +28,15 @@ export const skills: Skill[] = [
   {
     id: 'fintech',
     n: '01',
-    title: ['Fintech &', 'payments'],
-    label: 'Fintech & payments',
-    line: 'Real money, real cards, phones with no signal — flows that hold up.',
+    title: [
+      { en: 'Fintech &', es: 'Fintech' },
+      { en: 'payments', es: 'y pagos' },
+    ],
+    label: { en: 'Fintech & payments', es: 'Fintech y pagos' },
+    line: {
+      en: 'Real money, real cards, phones with no signal — flows that hold up.',
+      es: 'Dinero real, tarjetas reales, celulares sin señal: flujos que aguantan.',
+    },
     colour: 'blue',
     page: 'paper',
     accent: 'blue',
@@ -38,9 +45,15 @@ export const skills: Skill[] = [
   {
     id: 'ai',
     n: '02',
-    title: ['Building', 'with AI'],
-    label: 'Building with AI',
-    line: 'Agents do the typing. I own the architecture, the review and the result.',
+    title: [
+      { en: 'Building', es: 'Construir' },
+      { en: 'with AI', es: 'con IA' },
+    ],
+    label: { en: 'Building with AI', es: 'Construir con IA' },
+    line: {
+      en: 'Agents do the typing. I own the architecture, the review and the result.',
+      es: 'Los agentes escriben. La arquitectura, la revisión y el resultado son míos.',
+    },
     colour: 'red',
     page: 'paper',
     accent: 'red',
@@ -49,9 +62,15 @@ export const skills: Skill[] = [
   {
     id: 'backend',
     n: '03',
-    title: ['Backend', '& data'],
-    label: 'Backend & data',
-    line: 'APIs, Postgres and Redis: the parts nobody sees and everything depends on.',
+    title: [
+      { en: 'Backend', es: 'Backend' },
+      { en: '& data', es: 'y datos' },
+    ],
+    label: { en: 'Backend & data', es: 'Backend y datos' },
+    line: {
+      en: 'APIs that serve hundreds of people at once, on SQL, NoSQL and Redis.',
+      es: 'APIs que atienden a cientos de personas a la vez, sobre SQL, NoSQL y Redis.',
+    },
     colour: 'black',
     page: 'paper',
     accent: 'blue',
@@ -60,9 +79,12 @@ export const skills: Skill[] = [
   {
     id: 'ci-cd',
     n: '04',
-    title: ['CI/CD'],
-    label: 'CI/CD',
-    line: 'Every rule checked three times before anything reaches production.',
+    title: [{ en: 'CI/CD', es: 'CI/CD' }],
+    label: { en: 'CI/CD', es: 'CI/CD' },
+    line: {
+      en: 'Every rule checked three times before anything reaches production.',
+      es: 'Cada regla se revisa tres veces antes de que algo llegue a producción.',
+    },
     colour: 'yellow',
     page: 'black',
     accent: 'yellow',
@@ -71,9 +93,15 @@ export const skills: Skill[] = [
   {
     id: 'micro-frontends',
     n: '05',
-    title: ['Micro—', 'frontends'],
-    label: 'Micro-frontends',
-    line: 'Smaller deploys, a smaller bill, teams that ship on their own.',
+    title: [
+      { en: 'Micro—', es: 'Micro—' },
+      { en: 'frontends', es: 'frontends' },
+    ],
+    label: { en: 'Micro-frontends', es: 'Micro-frontends' },
+    line: {
+      en: 'Smaller deploys, a smaller bill, teams that ship on their own.',
+      es: 'Despliegues más pequeños, una factura más pequeña, equipos que publican solos.',
+    },
     colour: 'paper',
     page: 'black',
     accent: 'paper',

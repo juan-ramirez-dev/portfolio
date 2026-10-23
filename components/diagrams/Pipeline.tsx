@@ -3,10 +3,10 @@
 import { useRef } from 'react'
 import { ScrollTrigger, useGSAP, prefersReducedMotion } from '@/lib/gsap'
 
-type Props = { steps: string[]; figure: string }
+type Props = { steps: string[]; figure: string; caption: string }
 
 /** CI/CD track: a bead travels the stations as you scroll. */
-export function Pipeline({ steps, figure }: Props) {
+export function Pipeline({ steps, figure, caption }: Props) {
   const ref = useRef<HTMLElement>(null)
 
   useGSAP(
@@ -48,7 +48,7 @@ export function Pipeline({ steps, figure }: Props) {
         </ol>
       </div>
       <figcaption className="caption">
-        <span className="caption__fig">Fig. {figure}</span> Delivery pipeline — every merge walks the same path to production.
+        <span className="caption__fig">Fig. {figure}</span> {caption}
       </figcaption>
     </figure>
   )

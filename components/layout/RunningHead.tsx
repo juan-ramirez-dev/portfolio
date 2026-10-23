@@ -2,14 +2,18 @@
 
 import { useRef } from 'react'
 import { useGSAP, ScrollTrigger } from '@/lib/gsap'
-import { profile } from '@/content/profile'
+import { getContent } from '@/content'
+import { HOME, type Locale } from '@/content/i18n'
+import { asset } from '@/lib/asset'
 import { scrollToId } from '@/components/scroll/SmoothScroll'
 
 /**
  * Magazine running head. Takes its colours, section name and folio from whichever
  * [data-panel] is under it (data-label / data-folio).
  */
-export function RunningHead() {
+export function RunningHead({ lang }: { lang: Locale }) {
+  const { profile, ui } = getContent(lang)
+  const other: Locale = lang === 'en' ? 'es' : 'en'
   const ref = useRef<HTMLElement>(null)
 
   useGSAP(() => {
@@ -51,7 +55,12 @@ export function RunningHead() {
         {profile.name}
       </a>
       <span className="head__label" data-head-label />
-      <span className="head__folio" data-head-folio />
+      <span className="head__end">
+        <span className="head__folio" data-head-folio />
+        <a className="head__lang" href={asset(HOME[other])} hrefLang={other} lang={other} aria-label={ui.switchLabel}>
+          {ui.switchTo}
+        </a>
+      </span>
     </header>
   )
 }

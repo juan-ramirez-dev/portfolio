@@ -2,11 +2,13 @@
 
 import { useRef } from 'react'
 import { gsap, useGSAP, prefersReducedMotion } from '@/lib/gsap'
-import { skills } from '@/content/skills'
-import { profile } from '@/content/profile'
+import { getContent } from '@/content'
+import type { Locale } from '@/content/i18n'
 import { scrollToId } from '@/components/scroll/SmoothScroll'
+import { asset } from '@/lib/asset'
 
-export function Hero() {
+export function Hero({ lang }: { lang: Locale }) {
+  const { skills, profile, ui } = getContent(lang)
   const ref = useRef<HTMLElement>(null)
 
   useGSAP(
@@ -27,7 +29,7 @@ export function Hero() {
   )
 
   return (
-    <section ref={ref} id="cover" className="panel cover t-paper" data-panel data-label="Portfolio" data-folio="2026">
+    <section ref={ref} id="cover" className="panel cover t-paper" data-panel data-label={ui.cover.label} data-folio="2026">
       <div className="cover__grid">
         <div className="cover__intro">
           <p className="cover__role">{profile.title}</p>
@@ -37,14 +39,14 @@ export function Hero() {
         <div className="cover__portrait">
           {profile.portrait ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={profile.portrait} alt={profile.name} />
+            <img src={asset(profile.portrait)} alt={profile.name} />
           ) : (
-            <span className="cover__portrait-note">Portrait</span>
+            <span className="cover__portrait-note">{ui.cover.portrait}</span>
           )}
         </div>
 
         <nav className="cover__contents" aria-label="Contents">
-          <p className="label">Contents/</p>
+          <p className="label">{ui.cover.contents}</p>
           <ol className="contents">
             {skills.map((s) => (
               <li key={s.id} className={`a-${s.colour}`}>

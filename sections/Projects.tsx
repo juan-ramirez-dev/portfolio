@@ -1,16 +1,20 @@
-import { projects } from '@/content/projects'
+import { getContent } from '@/content'
+import type { Locale } from '@/content/i18n'
 import { SplitText } from '@/components/scroll/SplitText'
 
 /** Side projects and open source: one page, after the career index. */
-export function Projects() {
+export function Projects({ lang }: { lang: Locale }) {
+  const { projects, ui } = getContent(lang)
   return (
-    <section id="projects" className="panel projects t-yellow" data-panel data-label="Side projects" data-folio="—">
+    <section id="projects" className="panel projects t-yellow" data-panel data-label={ui.projects.label} data-folio="—">
       <div className="frame">
         <header className="case__head label" data-reveal>
-          <span>{projects.length} projects</span>
-          <span>Built on my own time</span>
+          <span>
+            {projects.length} {ui.projects.count}
+          </span>
+          <span>{ui.projects.own}</span>
         </header>
-        <SplitText text="On the side." className="projects__title" />
+        <SplitText text={ui.projects.title} className="projects__title" />
         <ul className="projects__grid">
           {projects.map((p) => (
             <li key={p.name} data-reveal>

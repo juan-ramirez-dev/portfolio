@@ -1,37 +1,51 @@
+import type { T } from './i18n'
+
 export type Project = {
   name: string
-  kind: string
-  line: string
-  stack: string[]
+  kind: T
+  line: T
+  stack: (string | T)[]
   href: string
 }
 
 export const projects: Project[] = [
   {
     name: 'Lucka',
-    kind: 'Desktop app · AI',
-    line: 'Personal finance that lives on your machine. Say what you spent; local AI writes it down.',
+    kind: { en: 'Desktop app · AI', es: 'App de escritorio · IA' },
+    line: {
+      en: 'Personal finance that lives on your machine. Say what you spent; local AI writes it down.',
+      es: 'Finanzas personales que viven en tu máquina. Dices lo que gastaste; una IA local lo anota.',
+    },
     stack: ['Tauri', 'Rust', 'SQLite', 'Whisper', 'llama.cpp'],
     href: 'https://juan-ramirez-dev.github.io/lucka-landing/',
   },
   {
     name: 'Lexio',
-    kind: 'Desktop app · AI',
-    line: 'Paste a reading, pick the phrases you want, and AI writes a lesson and exercises for each.',
-    stack: ['Tauri', 'Rust', 'SQLite', '4 AI providers'],
+    kind: { en: 'Desktop app · AI', es: 'App de escritorio · IA' },
+    line: {
+      en: 'Paste a reading, pick the phrases you want, and AI writes a lesson and exercises for each.',
+      es: 'Pegas una lectura, eliges las frases que quieres y la IA escribe una lección y ejercicios para cada una.',
+    },
+    stack: ['Tauri', 'Rust', 'SQLite', { en: '4 AI providers', es: '4 proveedores de IA' }],
     href: 'https://github.com/juan-ramirez-dev/random-english-terms',
   },
   {
     name: 'Mercado Pago template',
-    kind: 'Open source',
-    line: 'The Mercado Pago checkout I used at GooDev, published for other developers.',
+    kind: { en: 'Open source', es: 'Open source' },
+    line: {
+      en: 'The Mercado Pago checkout I used at GooDev, published for other developers.',
+      es: 'El checkout de Mercado Pago que usé en GooDev, publicado para otros desarrolladores.',
+    },
     stack: ['Next.js', 'MongoDB', 'Mercado Pago'],
     href: 'https://github.com/juan-ramirez-dev/mercado-pago-template-nextjs',
   },
   {
     name: 'Next + Supabase template',
-    kind: 'Open source',
-    line: 'Day one of every project: auth, role guards, CI, migrations and agent rules.',
+    kind: { en: 'Open source', es: 'Open source' },
+    line: {
+      en: 'Day one of every project: auth, role guards, CI, migrations and agent rules.',
+      es: 'El día uno de cada proyecto: auth, guards por rol, CI, migraciones y reglas para agentes.',
+    },
     stack: ['Next.js', 'Supabase', 'GitHub Actions'],
     href: 'https://github.com/juan-ramirez-dev/next-supabase-template',
   },

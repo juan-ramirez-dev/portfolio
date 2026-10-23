@@ -2,7 +2,11 @@
 
 import { useRef } from 'react'
 import { gsap, useGSAP, prefersReducedMotion } from '@/lib/gsap'
-import type { DiagramEdge, DiagramNode } from '@/content/cases'
+import type { DiagramEdge as RawEdge, DiagramNode as RawNode } from '@/content/cases'
+import type { Localized } from '@/content/i18n'
+
+type DiagramNode = Localized<RawNode>
+type DiagramEdge = Localized<RawEdge>
 
 const W = 1000
 const H = 520

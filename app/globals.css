@@ -151,15 +151,32 @@ a {
 }
 
 .head__label,
-.head__folio {
+.head__folio,
+.head__lang {
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
-.head__folio {
+.head__end {
   justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.head__lang {
+  pointer-events: auto;
+  padding: 3px 6px 2px;
+  border: 1px solid currentColor;
+  line-height: 1;
+}
+
+.head__lang:hover {
+  color: var(--paper);
+  background: var(--ink);
+  border-color: var(--ink);
 }
 
 @media (max-width: 599px) {
@@ -823,6 +840,12 @@ a {
   letter-spacing: -0.065em;
   color: var(--accent);
   font-variant-numeric: tabular-nums;
+}
+
+.metric__value--word {
+  font-size: clamp(2.4rem, 4.6vw, 4.8rem);
+  line-height: 0.95;
+  letter-spacing: -0.045em;
 }
 
 .metric__label {

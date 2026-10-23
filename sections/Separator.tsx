@@ -1,7 +1,9 @@
-import type { Skill } from '@/content/skills'
+import type { Content, LocalSkill } from '@/content'
+
+type Props = { skill: LocalSkill; ui: Content['ui']; folio: string }
 
 /** Full-bleed, single-colour opener for a skill. */
-export function Separator({ skill: s, folio }: { skill: Skill; folio: string }) {
+export function Separator({ skill: s, ui, folio }: Props) {
   return (
     <section
       id={s.id}
@@ -12,9 +14,9 @@ export function Separator({ skill: s, folio }: { skill: Skill; folio: string }) 
     >
       <div className="separator__top">
         <span className="label">{s.n}</span>
-        <span className="label">Skill</span>
+        <span className="label">{ui.separator.skill}</span>
         <span className="label">
-          {s.cases.length} {s.cases.length === 1 ? 'case' : 'cases'}
+          {s.cases.length} {s.cases.length === 1 ? ui.separator.case : ui.separator.cases}
         </span>
       </div>
 
