@@ -184,7 +184,7 @@ export const cases: Case[] = [
     company: 'Neura',
     role: 'Full Stack Developer',
     years: '2025',
-    stack: ['Next.js', 'React Native', 'Express', 'Supabase', 'Redis', 'OpenAI'],
+    stack: ['Next.js', 'React Native', 'Express', 'Supabase', 'Redis', 'OpenAI', 'Design system'],
     layers: ['Frontend', 'Mobile', 'Backend', 'Database', 'Integrations', 'AI'],
     logo: '/media/neura-logo.png',
     diagram: {
@@ -336,7 +336,7 @@ export const cases: Case[] = [
     company: 'Katapult Labs',
     role: 'Senior Full Stack Developer',
     years: NOW,
-    stack: ['Next.js', 'NestJS', 'Stripe', 'Supabase Postgres', 'Redis'],
+    stack: ['Next.js', 'NestJS', 'Stripe', 'Supabase Postgres', 'Redis', 'Design system'],
     layers: ['Frontend', 'Backend', 'Database', 'Integrations', 'CI/CD', 'AI'],
     diagram: {
       caption: {
@@ -433,7 +433,7 @@ export const cases: Case[] = [
     company: 'Devsu',
     role: 'Mobile & Frontend Developer',
     years: '2024 — 2025',
-    stack: ['React Native', 'NestJS', 'TypeScript', 'AWS'],
+    stack: ['React Native', 'NestJS', 'TypeScript', 'AWS', 'Design system'],
     layers: ['Frontend', 'Mobile', 'Backend', 'Integrations'],
     diagram: {
       caption: {
@@ -886,7 +886,7 @@ export const cases: Case[] = [
     company: 'Kuepa Edutech',
     role: 'Full Stack Developer',
     years: '2022 — 2024',
-    stack: ['React', 'Module Federation', 'Node', 'Socket.io', 'AWS'],
+    stack: ['React', 'Module Federation', 'Node', 'Socket.io', 'AWS', 'Design system'],
     layers: ['Frontend', 'Mobile', 'Backend', 'Database', 'Integrations'],
     diagram: {
       caption: {
