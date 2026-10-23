@@ -6,6 +6,7 @@ import { Hero } from '@/sections/Hero'
 import { Separator } from '@/sections/Separator'
 import { Case } from '@/sections/Case'
 import { Ledger } from '@/sections/Ledger'
+import { Projects } from '@/sections/Projects'
 import { Colophon } from '@/sections/Colophon'
 
 export default function Home() {
@@ -22,6 +23,7 @@ export default function Home() {
         </Fragment>
       ))}
       <Ledger />
+      <Projects />
       <Colophon />
       <Panels />
       <Animations />

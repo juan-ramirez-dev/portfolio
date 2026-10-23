@@ -10,6 +10,9 @@ export function Colophon() {
           <span>End of portfolio</span>
         </header>
         <SplitText text="Let's talk." className="colophon__title" />
+        <p className="colophon__availability" data-reveal>
+          {profile.availability}
+        </p>
         <div className="colophon__body">
           <a className="colophon__mail" href={`mailto:${profile.email}`} data-reveal>
             {profile.email}
