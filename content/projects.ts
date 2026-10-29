@@ -23,11 +23,11 @@ export const projects: Project[] = [
     name: 'Lexio',
     kind: { en: 'Desktop app · AI', es: 'App de escritorio · IA' },
     line: {
-      en: 'Paste a reading, pick the phrases you want, and AI writes a lesson and exercises for each.',
-      es: 'Pegas una lectura, eliges las frases que quieres y la IA escribe una lección y ejercicios para cada una.',
+      en: 'English from your own readings and meetings. Swipe the phrases you want; AI writes a lesson and exercises for each.',
+      es: 'Inglés desde tus propias lecturas y reuniones. Deslizas las frases que quieres; la IA escribe una lección y ejercicios para cada una.',
     },
-    stack: ['Tauri', 'Rust', 'SQLite', { en: '4 AI providers', es: '4 proveedores de IA' }],
-    href: 'https://github.com/juan-ramirez-dev/random-english-terms',
+    stack: ['Tauri', 'Rust', 'SQLite', 'llama.cpp', { en: '4 AI providers', es: '4 proveedores de IA' }],
+    href: 'https://juan-ramirez-dev.github.io/lexio-landing/',
   },
   {
     name: 'Mercado Pago template',
