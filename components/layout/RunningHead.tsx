@@ -1,9 +1,11 @@
 'use client'
 
 import { useRef } from 'react'
+import { usePathname } from 'next/navigation'
 import { useGSAP, ScrollTrigger } from '@/lib/gsap'
 import { getContent } from '@/content'
 import { HOME, type Locale } from '@/content/i18n'
+import { alternatePath, learningPath } from '@/content/learning'
 import { asset } from '@/lib/asset'
 import { scrollToId } from '@/components/scroll/SmoothScroll'
 
@@ -14,6 +16,8 @@ import { scrollToId } from '@/components/scroll/SmoothScroll'
 export function RunningHead({ lang }: { lang: Locale }) {
   const { profile, ui } = getContent(lang)
   const other: Locale = lang === 'en' ? 'es' : 'en'
+  const pathname = usePathname()
+  const onHome = `${pathname}/`.replace(/\/+$/, '/') === HOME[lang]
   const ref = useRef<HTMLElement>(null)
 
   useGSAP(() => {
@@ -45,9 +49,10 @@ export function RunningHead({ lang }: { lang: Locale }) {
   return (
     <header ref={ref} className="head">
       <a
-        href="#cover"
+        href={onHome ? '#cover' : asset(HOME[lang])}
         className="head__name"
         onClick={(e) => {
+          if (!onHome) return
           e.preventDefault()
           scrollToId('cover')
         }}
@@ -57,7 +62,16 @@ export function RunningHead({ lang }: { lang: Locale }) {
       <span className="head__label" data-head-label />
       <span className="head__end">
         <span className="head__folio" data-head-folio />
-        <a className="head__lang" href={asset(HOME[other])} hrefLang={other} lang={other} aria-label={ui.switchLabel}>
+        <a className="head__link" href={asset(learningPath(lang))}>
+          {ui.learning.label}
+        </a>
+        <a
+          className="head__lang"
+          href={asset(alternatePath(pathname, lang))}
+          hrefLang={other}
+          lang={other}
+          aria-label={ui.switchLabel}
+        >
           {ui.switchTo}
         </a>
       </span>

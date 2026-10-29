@@ -6,20 +6,18 @@ import { SmoothScroll } from '@/components/scroll/SmoothScroll'
 import { RunningHead } from '@/components/layout/RunningHead'
 import { getContent } from '@/content'
 import { HOME, type Locale } from '@/content/i18n'
+import { pageMetadata } from '@/lib/metadata'
+import { SITE_URL } from '@/lib/site'
 
 const sans = Inter_Tight({ subsets: ['latin'], variable: '--font-sans' })
 const mono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' })
 
+/** the home's metadata; every other page overrides title, description and alternates */
 export function metadataFor(lang: Locale): Metadata {
   const { ui } = getContent(lang)
   return {
-    metadataBase: new URL('https://juan-ramirez-dev.github.io'),
-    title: ui.meta.title,
-    description: ui.meta.description,
-    alternates: {
-      canonical: `/portfolio${HOME[lang]}`,
-      languages: { en: `/portfolio${HOME.en}`, es: `/portfolio${HOME.es}` },
-    },
+    metadataBase: new URL(SITE_URL),
+    ...pageMetadata({ lang, title: ui.meta.title, description: ui.meta.description, paths: HOME }),
   }
 }
 

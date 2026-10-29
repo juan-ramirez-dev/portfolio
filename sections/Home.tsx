@@ -8,6 +8,7 @@ import { Separator } from '@/sections/Separator'
 import { Case } from '@/sections/Case'
 import { Ledger } from '@/sections/Ledger'
 import { Projects } from '@/sections/Projects'
+import { Learning } from '@/sections/Learning'
 import { Colophon } from '@/sections/Colophon'
 
 export function Home({ lang }: { lang: Locale }) {
@@ -26,6 +27,7 @@ export function Home({ lang }: { lang: Locale }) {
       ))}
       <Ledger lang={lang} />
       <Projects lang={lang} />
+      <Learning lang={lang} />
       <Colophon lang={lang} />
       <Panels />
       <Animations />
