@@ -1,8 +1,7 @@
 import type { NextConfig } from 'next'
+import { BASE_PATH as basePath } from './lib/site'
 
 // Served from https://juan-ramirez-dev.github.io/portfolio/ (GitHub Pages, static export)
-const basePath = '/portfolio'
-
 const nextConfig: NextConfig = {
   output: 'export',
   basePath,
