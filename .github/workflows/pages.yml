@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [redesign/calibre]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
