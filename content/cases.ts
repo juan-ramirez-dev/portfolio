@@ -182,7 +182,7 @@ export const cases: Case[] = [
       es: 'IA dentro del producto y en toda la construcción: pantallas, integración con la API e iteración de UI.',
     },
     company: 'Neura',
-    role: 'Full Stack Developer',
+    role: { en: 'Tech Lead · Full Stack (part-time)', es: 'Tech Lead · Full Stack (medio tiempo)' },
     years: '2025',
     stack: ['Next.js', 'React Native', 'Express', 'Supabase', 'Redis', 'OpenAI', 'Design system'],
     layers: ['Frontend', 'Mobile', 'Backend', 'Database', 'Integrations', 'AI'],

@@ -20,7 +20,7 @@ export const career: Job[] = [
   },
   {
     company: 'Neura',
-    role: 'Full Stack Developer',
+    role: { en: 'Tech Lead · Full Stack (part-time)', es: 'Tech Lead · Full Stack (medio tiempo)' },
     years: '2025',
     built: { en: 'An AI assistant from zero', es: 'Un asistente con IA desde cero' },
     caseId: 'neura',
